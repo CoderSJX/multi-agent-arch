@@ -1,81 +1,409 @@
-# 基于意图识别的多智能体框架 
-Multi-Agent Architecture for Unified Interaction Entry
+# Multi-Agent Architecture Platform
 
-[![GitHub](https://img.shields.io/github/stars/CoderSJX/multi-agent-arch?style=social)](https://github.com/CoderSJX/multi-agent-arch)
-[![GitHub license](https://img.shields.io/github/license/CoderSJX/multi-agent-arch)](https://github.com/CoderSJX/multi-agent-arch/blob/main/LICENSE)
+[![Java](https://img.shields.io/badge/Java-17+-orange.svg)](https://www.oracle.com/java/)
+[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.3.0-brightgreen.svg)](https://spring.io/projects/spring-boot)
+[![Spring AI](https://img.shields.io/badge/Spring%20AI-1.0.0--M3-blue.svg)](https://spring.io/projects/spring-ai)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![Docker](https://img.shields.io/badge/Docker-Ready-blue.svg)](https://www.docker.com/)
 
-## 概述
+## 🌍 语言选择 | Language Select
 
-2025年被视作智能元年，各行业正致力于开发适用于自身业务场景的智能体以提升生产力和节约成本。然而，用户往往期望通过单一交互入口使用所有的智能体服务，而非多个分散的入口。为满足这一需求，我们开发了“基于意图识别的多智能体框架”，旨在提供一个统一的超级入口，支持多智能体调度、业务处理、RAG知识查询等功能，从而快速构建智能助理或智能客服应用。
-## 核心技术
-
-本项目基于阿里开源的Qwen2.5:14b文本大模型，该模型拥有出色的FunctionCall能力，能够精准理解提示词含义并调用相应的方法。我们利用了Qwen2.5强大的方法调用及参数填充功能来实现核心的意图识别，并通过Spring-AI框架进行智能体分发与业务调用管理。
-你也可以改成任何支持FunctionCall的大模型。
-## 关键特性
-
-- 超级入口：单一入口集成多种智能体服务。
-- 意图识别：基于Qwen2.5的大规模预训练模型实现高效准确的意图解析。 
-- 流式FunctionCall：提供打字机效果，增强用户体验。 
-- 远程方法调用中心：分离业务逻辑，提高代码清晰度和可维护性。 
-- 用户会话管理：保存用户连续对话记录，支持上下文感知的交互体验。
-### 技术
-本项目采用**Spring Boot、Spring-AI、Spring WebFlux、Redis、Qwen2.5以及PostgreSQL**等技术，构建了一个高性能、可扩展的多智能体服务平台。
-## 实现设计
-
-### 架构概述
-
-1. **统一接口**：处理所有用户的请求，接收当前问题、用户token及额外参数。
-2. **过滤器**：利用token建立用户上下文，便于后续处理中获取用户身份信息。
-3. **意图识别**：存储用户提问至数据库，提取历史提问构成对话历史，交由专门的意图识别智能体解析。
-4. **智能体匹配**：依据意图分类在数据库或内存中查找对应的智能体。
-5. **智能体执行**：配置并调用智能体，处理业务逻辑。
-6. **FunctionCall处理**：设计functioncall远程调用中心，集中处理所有functioncall，支持框架与业务分离。
-7. **MessageList管理**：更新用户的MessageList，控制其长度，保证对话的连贯性。
-8. **分布式支持**：考虑负载均衡和微服务架构，对智能体实例的存取进行改造，支持分布式部署。
-
-### 小细节
-
-- 使用Spring AI的Open-AI模型库，支持调用符合OpenAI格式的大模型。
-
-
-## 项目代码
-
-本项目的代码托管在GitHub上，提供了基本的代码框架，开发者可根据自己的业务需求进行扩展和调整。
-
-- [GitHub仓库链接](https://github.com/CoderSJX/multi-agent-arch)
+**简体中文** | [English](README_EN.md) | [日本語](README_JA.md) | [한국어](README_KO.md) | [Русский](README_RU.md) | [Español](README_ES.md)
 
 ---
 
-欢迎贡献代码，提出建议，一起完善这个项目！如果你有任何问题或需要帮助，请随时提交Issue或Pull Request。
+> 🚀 一个基于Spring AI和WebFlux的企业级多智能体架构平台，支持Function Calling、ReAct等先进范式，为构建智能对话系统提供强大而灵活的基础设施。
 
+## ✨ 核心特性
 
-## 附录
-### 提示词样例
-#### 意图识别的提示词样例
-```markdown
-## 角色
-你是一名擅长处理问题的经理，你能够将用户的问题准确地分配给对应的员工进行处理。
-## 流程
-1. 你首先要了解下面的几个员工擅长处理的问题范围，知道哪些问题应该分配给哪个员工。
-2. 你被给予一个用户提问的历史记录。你要基于历史记录中最后一条进行问题分析，分析出用户的这条问题最适合让谁来处理。你要认真对待最后一条提问，即使是很简单的提问。
-3. 如果你分析不出来，或者需要更多的参考，你就参照历史记录中的上一条提问来继续分析。
-4. 最终，你要调用select_person_id方法选择你要分配给哪个员工，并输出你的完整分析过程
+- 🤖 **多智能体协作架构** - 支持多种类型智能体的统一管理和调度
+- 🔄 **Function Calling支持** - 完整的工具调用能力，支持自定义函数扩展
+- ⚡ **ReAct范式实现** - 推理-行动循环，让智能体能够进行复杂的多步推理
+- 🌊 **响应式编程** - 基于WebFlux的非阻塞异步架构
+- 💾 **多数据源支持** - PostgreSQL + Redis的双重数据存储策略
+- 🐳 **容器化部署** - 完整的Docker支持，一键部署
+- 🔧 **高度可配置** - 灵活的配置管理，支持多种LLM提供商
+- 🎯 **企业级特性** - 用户隔离、权限管理、会话持久化
+
+## 🏗️ 架构概览
+
+```mermaid
+graph TB
+    A[用户请求] --> B[Assistant Controller]
+    B --> C[Intent Agent 意图识别]
+    C --> D[Agent Manager 智能体管理器]
+    D --> E[具体智能体实例]
+    E --> F[LLM Service 大模型服务]
+    F --> G[Function Calling 函数调用]
+    G --> H[工具执行]
+    G --> I[卡片渲染]
+    H --> F
+    I --> J[响应返回]
+
+    subgraph "数据层"
+        K[PostgreSQL]
+        L[Redis]
+    end
+
+    D -.-> K
+    D -.-> L
 ```
 
-#### 业务智能体提示词示例：待办
-```markdown
-## 身份
-你是待办小助手，你擅长分析用户的输入，将用户输入转化成一个操作指令。
-## 要求
-你必须按照流程处理待办。
-## 认知
-待办是一个记录用户待处理事项和已处理事项的模块。
-待办有以下几个参数：
-1. 待办的分类名。
-2. 待办的发起人。
-3. 待办的发起日期。
-4. 待办的内容。
-## 流程
-1. 分析用户的输入，识别用户想要进行的操作，用户想要进行的操作有四种：modify（修改）、query（查询、查看）、add（追加内容）。默认是查看。
-2. 调用handleCommand方法。
+## 🚀 快速开始
+
+### 环境要求
+
+- **Java**: 17+
+- **Maven**: 3.6+
+- **PostgreSQL**: 12+
+- **Redis**: 6+
+
+### 本地开发环境搭建
+
+1. **克隆项目**
+   ```bash
+   git clone https://github.com/your-username/multi-agent-arch.git
+   cd multi-agent-arch
+   ```
+
+2. **配置数据库**
+
+   创建PostgreSQL数据库：
+   ```sql
+   CREATE DATABASE assistant;
+   ```
+
+   创建用户表（如果需要）：
+   ```sql
+   -- 项目会自动通过JPA DDL创建表结构
+   -- ddl-auto: update 模式会自动更新表结构
+   ```
+
+3. **配置环境变量**
+
+   复制并编辑配置文件：
+   ```bash
+   # 在 application.yaml 中配置或通过环境变量设置
+
+   # 数据库配置
+   export SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/assistant
+   export SPRING_DATASOURCE_USERNAME=your_username
+   export SPRING_DATASOURCE_PASSWORD=your_password
+
+   # Redis配置
+   export SPRING_REDIS_HOST=localhost
+   export SPRING_REDIS_PORT=6379
+   export SPRING_REDIS_PASSWORD=your_redis_password
+
+   # LLM配置 (支持OpenAI兼容接口)
+   export LLM_MODEL_SERIES=qwen
+   export LLM_API_KEY=your_api_key
+   export LLM_ADDRESS=https://dashscope.aliyuncs.com/compatible-mode/v1
+   export LLM_MODEL=qwen-plus
+   ```
+
+4. **运行应用**
+   ```bash
+   mvn spring-boot:run
+   ```
+
+   或构建后运行：
+   ```bash
+   mvn clean package
+   java -jar target/mss-ai.jar
+   ```
+
+5. **验证服务**
+
+   服务启动后，访问健康检查端点：
+   ```bash
+   curl http://localhost:8080/ai/actuator/health
+   ```
+
+### Docker 部署
+
+1. **构建镜像**
+   ```bash
+   mvn clean package
+   docker build -t multi-agent-arch .
+   ```
+
+2. **运行容器**
+   ```bash
+   docker run -d \
+     --name multi-agent-arch \
+     -p 8080:8080 \
+     -e SPRING_DATASOURCE_URL=jdbc:postgresql://host.docker.internal:5432/assistant \
+     -e SPRING_DATASOURCE_USERNAME=your_username \
+     -e SPRING_DATASOURCE_PASSWORD=your_password \
+     -e LLM_API_KEY=your_api_key \
+     multi-agent-arch
+   ```
+
+## 📚 API 文档
+
+### 聊天对话接口
+
+**POST** `/ai/chat/completions`
+
+发起与智能体的对话，支持流式响应。
+
+```bash
+curl -X POST http://localhost:8080/ai/chat/completions \
+  -H "Content-Type: application/json" \
+  -d '{
+    "content": "帮我查询今天的天气",
+    "extra": {
+      "location": "北京",
+      "language": "zh-CN"
+    }
+  }'
 ```
+
+**请求参数:**
+- `content` (string, 必需): 用户输入的消息内容
+- `extra` (object, 可选): 额外的上下文信息
+
+**响应格式:**
+```json
+{
+  "content": "好的，我来帮您查询北京的天气信息...",
+  "status": "REPLYING",
+  "data": {},
+  "design": {}
+}
+```
+
+### 意图识别
+
+系统能够自动识别用户意图并调度相应的智能体：
+
+- **通用对话智能体** - 处理日常对话交流
+- **工具调用智能体** - 执行具体的函数调用
+- **知识检索智能体** - 进行信息查询和分析
+
+### Function Calling 支持
+
+系统支持完整的函数调用生命周期：
+
+1. **函数注册** - 在Agent配置中定义可用的工具函数
+2. **调用解析** - LLM自动识别需要调用的函数
+3. **参数提取** - 从对话中提取函数调用参数
+4. **函数执行** - 调用实际的业务逻辑
+5. **结果处理** - 将执行结果反馈给LLM进行下一步处理
+
+## 🛠️ 核心组件
+
+### Agent Manager (智能体管理器)
+
+负责智能体的生命周期管理：
+- 智能体类型的加载和管理
+- 智能体实例的创建和销毁
+- 会话状态的超时管理 (15分钟自动过期)
+
+### Intent Agent (意图识别智能体)
+
+基于LLM的意图识别系统：
+- 分析用户输入的业务类型
+- 自动调度到相应的专业智能体
+- 支持动态意图配置
+
+### LLM Service (大模型服务)
+
+统一的LLM调用接口：
+- 支持多种LLM提供商 (当前实现通义千问)
+- 流式和非流式响应模式
+- 完整的Function Calling支持
+
+### Function Call Service (函数调用服务)
+
+可扩展的函数调用框架：
+- 支持本地和远程函数调用
+- 统一的调用接口和响应格式
+- 支持卡片式响应渲染
+
+## 🔧 配置说明
+
+### application.yaml 完整配置示例
+
+```yaml
+# 服务基础配置
+spring:
+  webflux:
+    base-path: /ai
+  data:
+    redis:
+      host: ${SPRING_REDIS_HOST:localhost}
+      port: ${SPRING_REDIS_PORT:6379}
+      password: ${SPRING_REDIS_PASSWORD}
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/assistant}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+# 业务相关配置
+business:
+  llm:
+    model-series: ${LLM_MODEL_SERIES:qwen}
+    api-key: ${LLM_API_KEY}
+    url: ${LLM_ADDRESS}
+    model: ${LLM_MODEL}
+
+# 日志配置
+logging:
+  level:
+    root: ${LOGGING_LEVEL:info}
+    site.nullpointer.mss.ai: DEBUG
+```
+
+### 智能体类型配置
+
+智能体类型存储在数据库中，包含以下配置：
+
+- `type`: 智能体类型标识
+- `system_prompt`: 系统提示词
+- `function_tools`: 可用函数工具JSON配置
+- `temperature`: 温度参数
+- `description`: 智能体描述
+
+## 🎯 使用示例
+
+### 1. 基础对话
+
+```bash
+curl -X POST http://localhost:8080/ai/chat/completions \
+  -H "Content-Type: application/json" \
+  -d '{
+    "content": "你好，请介绍一下你自己"
+  }'
+```
+
+### 2. Function Calling 示例
+
+```bash
+curl -X POST http://localhost:8080/ai/chat/completions \
+  -H "Content-Type: application/json" \
+  -d '{
+    "content": "帮我创建一个待办事项：完成项目文档",
+    "extra": {
+      "priority": "high",
+      "category": "work"
+    }
+  }'
+```
+
+### 3. ReAct 范式示例
+
+```bash
+curl -X POST http://localhost:8080/ai/chat/completions \
+  -H "Content-Type: application/json" \
+  -d '{
+    "content": "我需要分析一下用户的购买行为数据，你能帮我吗？"
+  }'
+```
+
+系统会自动执行以下步骤：
+1. 分析用户需求
+2. 调用数据分析工具
+3. 解析分析结果
+4. 提供洞察和建议
+
+## 🧪 开发指南
+
+### 添加新的智能体类型
+
+1. 在数据库中插入新的智能体类型：
+```sql
+INSERT INTO agent_type (type, system_prompt, function_tools, temperature, description, is_public, enterprise_id)
+VALUES (
+  'CUSTOM_AGENT',
+  '你是一个专业的数据分析助手...',
+  '[{"function": {"name": "analyze_data", "description": "分析数据"}}]',
+  0.7,
+  '数据分析智能体',
+  true,
+  'default'
+);
+```
+
+2. 重启应用或调用AgentManager的`loadAgentType()`方法重新加载配置。
+
+### 自定义Function Calling
+
+1. 实现`FunctionCallService`接口：
+```java
+@Service
+public class CustomFunctionCallService implements FunctionCallService {
+    @Override
+    public FunctionCallResult apply(FunctionCallRequest request) {
+        // 实现你的业务逻辑
+        return FunctionCallResult.builder()
+            .content("执行结果")
+            .build();
+    }
+}
+```
+
+2. 在智能体配置中注册你的函数：
+```json
+{
+  "function": {
+    "name": "custom_function",
+    "description": "自定义函数描述",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "param1": {"type": "string"}
+      }
+    }
+  }
+}
+```
+
+## 🤝 贡献指南
+
+我们欢迎所有形式的贡献！请阅读以下指南：
+
+1. Fork 本仓库
+2. 创建你的特性分支 (`git checkout -b feature/AmazingFeature`)
+3. 提交你的更改 (`git commit -m 'Add some AmazingFeature'`)
+4. 推送到分支 (`git push origin feature/AmazingFeature`)
+5. 开启一个 Pull Request
+
+### 代码规范
+
+- 遵循 Spring Boot 最佳实践
+- 使用 Lombok 减少样板代码
+- 保持代码简洁和可读性
+- 添加适当的单元测试
+
+## 📄 许可证
+
+本项目采用 Apache License 2.0 许可证。详情请查看 [LICENSE](LICENSE) 文件。
+
+## 🙏 致谢
+
+- [Spring AI](https://spring.io/projects/spring-ai) - 提供强大的AI集成框架
+- [Spring WebFlux](https://spring.io/projects/spring-boot) - 响应式Web框架
+- [通义千问](https://qianwen.aliyun.com/) - 提供优秀的LLM能力
+
+## 📞 联系我们
+
+- 项目主页: [https://github.com/your-username/multi-agent-arch](https://github.com/your-username/multi-agent-arch)
+- 问题反馈: [Issues](https://github.com/your-username/multi-agent-arch/issues)
+- 讨论交流: [Discussions](https://github.com/your-username/multi-agent-arch/discussions)
+
+---
+
+<div align="center">
+  <p>如果这个项目对你有帮助，请给我们一个 ⭐️</p>
+  <p>Made with ❤️ by the Multi-Agent Architecture Team</p>
+</div>
